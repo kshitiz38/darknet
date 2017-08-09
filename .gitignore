@@ -5,6 +5,8 @@
 *.png
 *.jpg
 *.pyc
+*.txt
+*.weights
 old/
 mnist/
 data/
@@ -20,6 +22,9 @@ darknet
 .fuse*
 
 # OS Generated #
+._*
+_*
+_.*
 .DS_Store*
 ehthumbs.db
 Icon?

@@ -345,7 +345,7 @@ void set_batch_network(network *net, int b)
         if(net->layers[i].type == DECONVOLUTIONAL){
             layer *l = net->layers + i;
             cudnnSetTensor4dDescriptor(l->dstTensorDesc, CUDNN_TENSOR_NCHW, CUDNN_DATA_FLOAT, 1, l->out_c, l->out_h, l->out_w);
-            cudnnSetTensor4dDescriptor(l->normTensorDesc, CUDNN_TENSOR_NCHW, CUDNN_DATA_FLOAT, 1, l->out_c, 1, 1); 
+            cudnnSetTensor4dDescriptor(l->normTensorDesc, CUDNN_TENSOR_NCHW, CUDNN_DATA_FLOAT, 1, l->out_c, 1, 1);
         }
 #endif
     }
@@ -472,7 +472,7 @@ void visualize_network(network net)
         if(l.type == CONVOLUTIONAL){
             prev = visualize_convolutional_layer(l, buff, prev);
         }
-    } 
+    }
 }
 
 void top_predictions(network net, int k, int *index)
@@ -531,6 +531,14 @@ float *network_predict_p(network *net, float *input)
     return network_predict(*net, input);
 }
 
+feature network_extract_feat(network *net, int n){
+    layer l = net->layers[n-1];
+    feature f = {0};
+    f.size = l.outputs*l.batch;
+    f.feat = l.output;
+    return f;
+}
+
 float *network_predict_image(network *net, image im)
 {
     image imr = letterbox_image(im, net->w, net->h);
@@ -565,7 +573,7 @@ matrix network_predict_data_multi(network net, data test, int n)
         }
     }
     free(X);
-    return pred;   
+    return pred;
 }
 
 matrix network_predict_data(network net, data test)
@@ -588,7 +596,7 @@ matrix network_predict_data(network net, data test)
         }
     }
     free(X);
-    return pred;   
+    return pred;
 }
 
 void print_network(network net)
@@ -630,7 +638,7 @@ void compare_networks(network n1, network n2, data test)
     printf("%5d %5d\n%5d %5d\n", a, b, c, d);
     float num = pow((abs(b - c) - 1.), 2.);
     float den = b + c;
-    printf("%f\n", num/den); 
+    printf("%f\n", num/den);
 }
 
 float network_accuracy(network net, data d)
@@ -709,4 +717,3 @@ float *network_output(network net)
 {
     return network_output_layer(net).output;
 }
-

@@ -8,6 +8,10 @@
 #include "data.h"
 #include "tree.h"
 
+typedef struct {
+    int size;
+    float *feat;
+} feature;
 
 #ifdef GPU
 float train_network_datum_gpu(network net);
@@ -20,6 +24,7 @@ char *get_layer_string(LAYER_TYPE a);
 
 network make_network(int n);
 
+feature network_extract_feat(network *net, int n);
 
 float network_accuracy_multi(network net, data d, int n);
 int get_predicted_class_network(network net);
@@ -28,4 +33,3 @@ int resize_network(network *net, int w, int h);
 void calc_network_cost(network net);
 
 #endif
-
