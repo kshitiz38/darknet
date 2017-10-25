@@ -13,6 +13,12 @@ typedef struct {
     float *feat;
 } feature;
 
+typedef struct {
+    int w;
+    int h;
+    int c;
+} dims;
+
 #ifdef GPU
 float train_network_datum_gpu(network net);
 float *network_predict_gpu(network net, float *input);

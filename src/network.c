@@ -65,6 +65,16 @@ network *load_network_p(char *cfg, char *weights, int clear)
     return net;
 }
 
+network *load_network_p_gpu(char *cfg, char *weights, int clear, int gpu)
+{
+    network *net = calloc(1, sizeof(network));
+#ifdef GPU
+    cuda_set_device(gpu);
+#endif
+    *net = load_network(cfg, weights, clear);
+    return net;
+}
+
 size_t get_current_batch(network net)
 {
     size_t batch_num = (*net.seen)/(net.batch*net.subdivisions);
@@ -535,8 +545,20 @@ feature network_extract_feat(network *net, int n){
     layer l = net->layers[n-1];
     feature f = {0};
     f.size = l.outputs*l.batch;
+#ifdef GPU
+    cuda_pull_array(l.output_gpu, l.output, l.outputs*l.batch);
+#endif
     f.feat = l.output;
     return f;
+}
+
+dims layer_dims(network *net, int n){
+    layer l = net->layers[n-1];
+    dims info = {0};
+    info.w = l.out_w;
+    info.h = l.out_h;
+    info.c = l.out_c;
+    return info;
 }
 
 float *network_predict_image(network *net, image im)
